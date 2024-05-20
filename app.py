@@ -67,13 +67,9 @@ def colorizer(img, input_filename):
 
 ##########################################################################################################
     
-st.write("""
-          # Colorize your Black and White Image
-          """
-          )
+st.title("Colorize your Black and White Image")
 
 st.write("This is an app to colorize your B&W images.")
-st.write("Created on Thursday, 12 November 2020 (IST) \n @author: Dhananjayan")
 
 # Load sample images
 input_images_dir = "Input_images"
