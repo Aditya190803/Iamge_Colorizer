@@ -8,7 +8,7 @@ import os
 # Set page configuration to expand sidebar by default
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
-def colorizer(img, input_filename):
+def colorizer(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     
@@ -55,17 +55,6 @@ def colorizer(img, input_filename):
     # the current colorized image is represented as a floating point data type in the range [0, 1] -- let's convert to an unsigned 8-bit integer representation in the range [0, 255]
     colorized = (255 * colorized).astype("uint8")
     
-    # Ensure the output directory exists
-    output_dir = os.path.join(script_dir, "Result_image")
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Construct the output path
-    output_path = os.path.join(output_dir, input_filename)
-    
-    # Save the colorized image
-    cv2.imwrite(output_path, cv2.cvtColor(colorized, cv2.COLOR_RGB2BGR))
-    
-    # Return the colorized images
     return colorized
 
 ##########################################################################################################
@@ -77,30 +66,28 @@ st.write("This is an app to colorize your B&W images.")
 # Load sample images
 input_images_dir = "Input_images"
 input_images = [f for f in os.listdir(input_images_dir) if f.endswith(('.jpg', '.png'))]
-selected_image = st.sidebar.selectbox("Choose a sample image", input_images)
+selected_image = st.sidebar.selectbox("Choose a sample image", ["None"] + input_images)
 
 file = st.sidebar.file_uploader("Or upload an image file", type=["jpg", "png"])
 
 if file is None:
-    if selected_image:
+    if selected_image != "None":
         image_path = os.path.join(input_images_dir, selected_image)
         image = Image.open(image_path)
         img = np.array(image)
-        input_filename = selected_image
+    else:
+        image = None
 else:
     image = Image.open(file)
     img = np.array(image)
-    input_filename = file.name
     
 if image:
     st.text("Your original image")
     st.image(image, use_column_width=True)
     
     st.text("Your colorized image")
-    color = colorizer(img, input_filename)
+    color = colorizer(img)
     
     st.image(color, use_column_width=True)
     
-    st.text(f"Colorized image saved as 'Result_image/{input_filename}'")
-    
-    print("done!")
+    st.text("Select an image to display its colorized version.")
