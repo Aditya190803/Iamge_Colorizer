@@ -5,6 +5,9 @@ import streamlit as st
 from PIL import Image
 import os
 
+# Set page configuration to expand sidebar by default
+st.set_page_config(layout="wide", initial_sidebar_state="expanded")
+
 def colorizer(img, input_filename):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
